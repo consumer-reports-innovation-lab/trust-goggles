@@ -1,0 +1,14 @@
+! name: Trust Signals Lens
+! description: Boost and downrank sources using internal trust score tiers.
+! public: false
+! author: Trust Signals
+
+! generated_at: 2026-05-11T18:56:03.316235Z
+! generated_by: trust-signals-api
+
+$boost=3,site=digitalshieldpro.com
+$boost=3,site=zdnet.com
+$boost=3,site=security.org
+$boost=3,site=cnbc.com
+$downrank=3,site=comparitech.com
+$downrank=3,site=nortonsecurityonline.com
