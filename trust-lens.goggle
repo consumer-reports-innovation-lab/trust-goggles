@@ -3,18 +3,28 @@
 ! public: false
 ! author: Trust Signals
 
-! generated_at: 2026-05-12T15:27:53.468509Z
+! generated_at: 2026-05-12T16:57:16.785120Z
 ! generated_by: trust-signals-api
 
 $boost=3,site=digitalshieldpro.com
 $boost=3,site=zdnet.com
+$boost=3,site=strumavenue.com
 $boost=3,site=healthline.com
+$boost=3,site=wareable.com
+$boost=3,site=northshorecrafts.com
+$boost=3,site=techgearlab.com
 $boost=3,site=whathifi.com
 $boost=3,site=reviewed.com
 $boost=3,site=security.org
 $boost=3,site=packhacker.com
 $boost=3,site=cnbc.com
+$boost=3,site=guitarplayer.com
+$boost=3,site=trailrunnermag.com
 $downrank=3,site=comparitech.com
+$downrank=3,site=universityofrock.com
+$downrank=3,site=wearablewellnessguide.com
+$downrank=3,site=timesshoppingguide.com
 $downrank=3,site=nortonsecurityonline.com
 $downrank=3,site=furniturefair.net
+$downrank=3,site=aolon.net
 $downrank=3,site=bestbuy.ca
