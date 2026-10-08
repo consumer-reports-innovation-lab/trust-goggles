@@ -1,0 +1,36 @@
+! name: Trust Signals Lens - CD Players
+! description: Boost and downrank sources using internal trust score tiers.
+! public: false
+! author: Trust Signals
+
+! generated_at: 2026-10-08T15:40:35.427809Z
+! generated_by: trust-signals-api
+
+$boost=5,site=av.com
+$boost=5,site=manual.kenwood.com
+$boost=5,site=nytimes.com
+$boost=5,site=share.qclt.com
+$boost=5,site=whathifi.com
+$boost=4,site=bestproducts.com
+$boost=4,site=howtogeek.com
+$boost=4,site=loudersound.com
+$boost=4,site=augustint.com
+$boost=4,site=bestreviews.com
+$boost=4,site=enjoythemusic.com
+$boost=4,site=softwaretestinghelp.com
+$boost=3,site=crutchfield.com
+$boost=3,site=headfonics.com
+$boost=3,site=siemens-mobile.com
+$boost=1,site=headfonia.com
+$downrank=2,site=birracabriole.com
+$downrank=2,site=nottinghamhifi.co.uk
+$downrank=2,site=emergingreal.com
+$downrank=2,site=theaudiotalk.com
+$downrank=2,site=christholdfast.org
+$downrank=2,site=trettitre.com
+$downrank=2,site=carinterior.alibaba.com
+$downrank=2,site=ensightauto.com
+$downrank=2,site=gocarlife.com
+$downrank=2,site=thewearify.com
+$downrank=2,site=wisepickers.com
+$downrank=2,site=hifiwalker.com
