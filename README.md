@@ -8,7 +8,6 @@ Hosted [Brave Goggles](https://github.com/brave/goggles-quickstart) that re-rank
 
 | File | Description |
 | --- | --- |
-| `trust-lens.goggle` | Global goggle covering every evaluated source. |
 | `trust-lens-<topic-slug>.goggle` | Topic-scoped goggle, for example `trust-lens-cd-players.goggle`. One file per research topic. |
 
 Each file is a flat list of per-domain rules produced from Trust Signals source evaluations:
