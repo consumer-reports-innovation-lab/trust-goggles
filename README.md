@@ -2,7 +2,7 @@
 
 Hosted [Brave Goggles](https://github.com/brave/goggles-quickstart) that re-rank web search results using Consumer Reports' Trust Signals scores. This repo is the **publish target**: it holds the generated `.goggle` files, and Brave fetches them from here by raw URL.
 
-> **This repository is public.** Every domain and score tier published here is visible to anyone, regardless of the `! public:` header in a goggle (that header only controls Brave's directory listing). Do not commit anything you would not want read externally.
+> **This repository is public.** Every domain and score tier published here is visible to anyone. Do not commit anything you would not want read externally. Goggles must also carry `! public: true`: in testing, Brave's Search API did not apply a private goggle, and it applied the same file once public.
 
 ## What's in here
 
@@ -23,11 +23,12 @@ The `! generated_at` and `! generated_by` headers record when and by what the fi
 
 ## How we use them
 
-AskCR Search Assist calls the Brave Search API. We pass one or more of these goggles with the request so that sources CR's Trust Signals rate highly rank higher, and sources it rates poorly rank lower, before results reach the answer step.
+AskCR Search Assist calls the Brave Search API. We pass a topic's goggle with the request so that sources CR's Trust Signals rate highly rank higher, and sources it rates poorly rank lower, before results reach the answer step.
 
 - A domain's median trust score (over its evaluated URLs) maps to a tier: `boost`, `downrank`, `discard`, or no rule.
-- Generation can be scoped to one research topic, so a narrow topic goggle can be layered with broader ones. Brave accepts up to **3 goggles per query**, so the intended pattern is narrow topic, then broader category, then the general trust-list fallback.
-- The URLs used at search time are configured in `trust-signals-api` via `BRAVE_GOGGLES_URL` (one) or `BRAVE_GOGGLES_URLS` (comma-separated).
+- Generation is scoped to one research topic. AskCR asks `trust-signals-api` (`GET /api/topics/goggles`) for its topics, an LLM matches the question to one, and the URL for that topic's file (`trust-lens-<topic-slug>.goggle`, derived by naming convention) is sent to Brave. No match or any failure means no goggle.
+- Brave's Web Search applies **one** hosted goggle, through `goggles_id`; hosted URLs in its `goggles` param are silently ignored. LLM Context takes hosted goggles (up to 3) through `goggles`. AskCR handles this per endpoint.
+- The `BRAVE_GOGGLES_URL` / `BRAVE_GOGGLES_URLS` settings in `trust-signals-api` only affect its own Brave search provider.
 
 Tier definitions live in `trust-signals-api` at `src/trust_signals/admin/config/brave_goggles_tiers.toml`. Strengths run 1-10. If conflicting rules match, Brave resolves them as `discard` > `boost` > `downrank`, and a higher strength wins within an action.
 
@@ -101,7 +102,7 @@ git commit -m "update trust goggles file"
 git push origin main
 ```
 
-A push is live as soon as it lands: Brave serves the new rules at the same URL, with no re-registration. See Rollback below if something goes wrong.
+A push does **not** change ranking by itself: Brave serves its stored copy of a registered goggle, so resubmit the URL after every change (see below). See Rollback if something goes wrong.
 
 ## Registering a goggle with Brave
 
@@ -117,14 +118,15 @@ Notes:
 
 - **Register each file separately.** Every topic goggle has its own URL, so each needs its own registration.
 - **Keep URLs stable.** Registration is per URL. Update content by publishing over the same file name, not by creating a new file.
-- **Updates need no re-registration.** Brave reads the file at its URL, so a new commit changes ranking immediately.
+- **Resubmit after every update.** Brave serves its stored copy of a registered goggle, not the live file. A regenerated file kept ranking with its old rules for at least several minutes after the push, and a goggle deleted from GitHub kept changing results. After pushing, submit the same URL again at the create page.
+- **Brave never confirms a goggle applied.** A missing file, an unregistered URL or a private goggle all return 200 with unchanged results. To check, compare result domains with and without the goggle, or against the same rules sent inline in `goggles`.
 - **Limits per file:** 100,000 instructions, 2 MB, 500 characters per instruction, at most 2 wildcards and 2 carets per instruction.
-- **Per query:** up to 3 goggles. Short rule sets can alternatively be passed inline in the `goggles` parameter without hosting.
+- **Per query:** up to 3 goggles on LLM Context, but only one hosted goggle on Web Search (`goggles_id`). Short rule sets can alternatively be passed inline in the `goggles` parameter without hosting; that works on both endpoints.
 
 References: [Brave Search API goggles docs](https://api-dashboard.search.brave.com/documentation/resources/goggles), [brave/goggles-quickstart](https://github.com/brave/goggles-quickstart).
 
 ## Rollback
 
-Revert the commit that changed the goggle file. The old rules are live again at the same URL. If the problem came from tier config rather than the data, also revert the config change in `trust-signals-api` before the next publish, or the bad rules will return.
+Revert the commit that changed the goggle file, then resubmit the URL at the create page so Brave replaces its stored copy. If the problem came from tier config rather than the data, also revert the config change in `trust-signals-api` before the next publish, or the bad rules will return.
 
 To check the effect, run the same Brave queries with and without the goggle URL.
